@@ -1,0 +1,9 @@
+# Tipe MIME yang benar untuk PWA
+AddType application/manifest+json .webmanifest
+AddType image/webp .webp
+AddType text/javascript .js
+
+# Service worker & halaman utama selalu dicek ulang agar update cepat sampai ke tablet
+<FilesMatch "^(sw\.js|index\.html|manifest\.webmanifest)$">
+  Header set Cache-Control "no-cache"
+</FilesMatch>

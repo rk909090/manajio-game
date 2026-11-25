@@ -2,6 +2,8 @@
 
 Game booth pameran untuk **Manajio Meet** (Event Challenge 3). Pemain memecahkan balon bertuliskan “Manajio” sebanyak mungkin dalam 15 detik di tablet.
 
+**Live:** https://game.psm-manajemen.com (Hostinger Cloud, paket PSM; deploy isi folder `dist/`)
+
 - Balon “Manajio”: **+5 poin**
 - Balon lain (silang, bintang, kado): **−1 poin** (skor tidak turun di bawah 0)
 - Skor **≥ 15** mendapat **Popcorn Gratis**
