@@ -30,13 +30,19 @@
   --sar:1.025; --bx:10.5%; --by:34.05%; --bw:79.1%; --bh:37.17%;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:clamp(13px,min(2.1vw,1.45vh),24px)}
-@media (orientation:landscape){html{font-size:clamp(13px,min(1.3vw,2.1vh),24px)}}
+/* Game dirancang PORTRAIT (monitor sentuh tegak 9:16). Di layar yang lebih lebar dari 3:4 (mis. laptop landscape),
+   game tampil sebagai kolom tegak di tengah layar, bukan tata letak landscape. */
+html{font-size:clamp(10px,min(2.1vw,1.45vh),48px)}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--font);
   overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
 img{-webkit-user-drag:none;user-select:none}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
-#app{position:fixed;inset:0;overflow:hidden}
+#app{position:fixed;top:0;bottom:0;left:50%;width:min(100vw,75vh);transform:translateX(-50%);overflow:hidden;background:var(--bg);
+  container-type:inline-size}
+@media (min-aspect-ratio:3/4){
+  body{background:radial-gradient(120% 90% at 50% 0%,#2A4FD8 0%,#14217A 55%,#0B1350 100%)}
+  #app{box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 90px rgba(0,0,30,.55)}
+}
 
 /* ---------- screens ---------- */
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:scale(1.015);
@@ -89,7 +95,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .pill::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
   transform:translateX(-100%);animation:sweep 4.5s ease-in-out infinite 1s}
 @keyframes sweep{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.stage{position:relative;width:min(34rem,100%,calc((100vh - 42.5rem) / var(--sar)));width:min(34rem,100%,calc((100dvh - 42.5rem) / var(--sar)));
+.stage{position:relative;width:min(34rem,100%,calc((100vh - 46rem) / var(--sar)));width:min(34rem,100%,calc((100dvh - 46rem) / var(--sar)));
   min-width:16rem;container-type:inline-size}
 .stage-img{display:block;width:100%;height:auto;filter:drop-shadow(0 18px 24px rgba(20,40,120,.18))}
 .board{position:absolute;left:var(--bx);top:var(--by);width:var(--bw);height:var(--bh);display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -123,11 +129,6 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .foot b{color:var(--blue)}
 .brand-logo.holding::after{content:"";position:absolute;inset:-.35rem;border-radius:1.1rem;border:3px solid var(--blue);animation:holdfill 2s linear forwards}
 @keyframes holdfill{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-@media (orientation:landscape){
-  .intro-wrap{max-width:76rem;flex-direction:row;align-items:center;gap:3rem;padding:1.2rem 2.5rem}
-  .intro-left{flex:1.05}.intro-right{flex:1;max-width:34rem}
-  .stage{width:min(32rem,100%,calc((100vh - 12rem) / var(--sar)));width:min(32rem,100%,calc((100dvh - 12rem) / var(--sar)))}
-}
 
 /* ---------- GAME ---------- */
 #scr-game{overflow:hidden;background:#2E6FF2}
@@ -140,7 +141,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .field{position:relative;flex:1;overflow:hidden;touch-action:none;background:#7FB2FF url(assets/sky.webp) center top/cover no-repeat}
 .cloud{position:absolute;pointer-events:none;opacity:.75;animation:drift linear infinite}
 .cloud svg{width:100%;display:block}
-@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+@keyframes drift{from{transform:translateX(-30cqw)}to{transform:translateX(130cqw)}}
 .hud{position:absolute;z-index:4;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;padding:1.2rem 1.4rem;pointer-events:none}
 .timer{position:relative;overflow:hidden;display:flex;align-items:center;gap:.7rem;padding:.75rem 1.6rem .75rem 1.3rem;border-radius:999px;font-size:2.1rem;font-weight:800;
   color:#0B3FB8;background:rgba(232,243,255,.88);box-shadow:0 10px 26px -10px rgba(5,40,140,.55),inset 0 1px 0 #fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
@@ -151,6 +152,29 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .timer.warn{color:#D61F3A;animation:pulse .5s ease-in-out infinite alternate}
 .timer.warn .timer-fill{background:linear-gradient(90deg,rgba(239,68,88,.16),rgba(239,68,88,.3))}
 @keyframes pulse{to{transform:scale(1.06)}}
+.hud-right{display:flex;flex-direction:column;align-items:flex-end;gap:.7rem}
+.combo{display:flex;align-items:center;gap:.55rem;padding:.35rem 1rem .35rem .4rem;border-radius:999px;color:#fff;font-weight:800;white-space:nowrap;
+  background:linear-gradient(160deg,#3D84FF,#0848C9);box-shadow:0 10px 22px -10px rgba(5,40,140,.7),inset 0 1px 0 rgba(255,255,255,.35);
+  opacity:0;transform:translateY(-.4rem) scale(.7);transform-origin:right center;transition:opacity .2s,transform .25s cubic-bezier(.3,1.6,.5,1)}
+.combo.on{opacity:1;transform:none}
+.combo b{font-size:1.55rem;line-height:1;padding:.3rem .55rem;border-radius:999px;background:rgba(255,255,255,.24);font-variant-numeric:tabular-nums}
+.combo span{font-size:1.05rem}
+.combo.m2{background:linear-gradient(160deg,#FFB23D,#F2541A)}
+.combo.m3{background:linear-gradient(160deg,#FF4FA3,#9B2CF0);animation:hot .6s ease-in-out infinite alternate}
+@keyframes hot{to{box-shadow:0 0 0 .35rem rgba(255,79,163,.25),0 10px 22px -10px rgba(120,20,140,.7)}}
+.combo.lvl{animation:bump .4s cubic-bezier(.3,1.6,.5,1)}
+.combo.brk{opacity:0;transform:translateY(.6rem) scale(.8) rotate(-6deg);transition:opacity .45s .15s,transform .45s}
+.toast{position:absolute;z-index:5;left:50%;top:20%;display:flex;align-items:center;gap:.6rem;padding:.85rem 1.6rem;border-radius:1.3rem;font-weight:800;font-size:1.55rem;
+  color:#fff;white-space:nowrap;pointer-events:none;background:rgba(14,26,61,.86);box-shadow:0 18px 36px -14px rgba(0,10,60,.7);
+  animation:toast 1.9s cubic-bezier(.2,.9,.3,1.2) forwards}
+.toast.warn{background:linear-gradient(160deg,#FF6A55,#D61F3A)}
+.toast.gold{background:linear-gradient(160deg,#FFC93C,#F29A0C);color:#4A2C00}
+.toast.hot{background:linear-gradient(160deg,#FF4FA3,#9B2CF0)}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}12%{opacity:1;transform:translate(-50%,0) scale(1.06)}20%{transform:translate(-50%,0) scale(1)}
+  80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-40%)}}
+.field.rush::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;box-shadow:inset 0 0 6rem 1rem rgba(255,90,60,.35);animation:rush .5s ease-in-out infinite alternate}
+@keyframes rush{from{opacity:.35}to{opacity:1}}
+.field.shake{animation:shake .4s}
 .scorebox{min-width:6.6rem;padding:.55rem 1.3rem .7rem;border-radius:1.3rem;text-align:center;background:#fff;box-shadow:0 10px 26px -10px rgba(5,40,140,.55)}
 .scorebox small{display:block;font-size:1.05rem;font-weight:700;color:#3B4A6B}
 .scorebox b{display:block;font-size:2.7rem;line-height:1;font-weight:800;color:#0B3FB8;font-variant-numeric:tabular-nums}
@@ -172,6 +196,16 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .bln-face span{font-size:.17em;font-weight:800;letter-spacing:-.02em;text-shadow:0 .06em .12em rgba(0,20,90,.45)}
 .bln-face svg{width:.44em;height:.44em;filter:drop-shadow(0 .015em .02em rgba(0,0,0,.25))}
 .bln.pop .bln-in{animation:popOut .17s ease-out forwards}
+/* balon emas & bom: aset balon kuning/ungu yang diwarnai ulang */
+.t-gold .bln-img{filter:saturate(1.7) brightness(1.05) sepia(.25) drop-shadow(0 0 .045em rgba(255,196,30,.95)) drop-shadow(0 0 .12em rgba(255,214,90,.6))}
+.t-gold .bln-face span{color:#7A4A00;text-shadow:0 .04em 0 rgba(255,255,255,.6)}
+.t-gold .bln-face img{filter:brightness(0) saturate(100%) invert(27%) sepia(60%) saturate(900%) hue-rotate(10deg) drop-shadow(0 .01em 0 rgba(255,255,255,.5))}
+.t-gold::after{content:"";position:absolute;left:18%;top:8%;width:.16em;height:.16em;background:#fff;
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 1.1s ease-in-out infinite}
+.t-bomb .bln-img{filter:grayscale(1) brightness(.34) contrast(1.35)}
+.t-bomb .bln-face svg{width:.5em;height:.5em}
+.t-bomb .spark{transform-box:fill-box;transform-origin:center;animation:fuse .18s steps(2) infinite alternate}
+@keyframes fuse{to{transform:scale(1.35);opacity:.6}}
 @keyframes popOut{to{transform:scale(1.35);opacity:0}}
 .burst{position:absolute;width:0;height:0}
 .burst i{position:absolute;left:-.32rem;top:-.55rem;width:.64rem;height:1.1rem;border-radius:.3rem;background:var(--c);
@@ -193,10 +227,13 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .overlay.on{opacity:1;visibility:visible;transition:opacity .35s}
 .cd-num{width:12rem;height:12rem;border-radius:50%;display:grid;place-items:center;font-size:6.5rem;font-weight:800;color:#0B4FD9;
   background:radial-gradient(circle at 35% 30%,#fff,#E6F0FF);box-shadow:0 0 0 .7rem rgba(255,255,255,.35),0 24px 50px -16px rgba(5,30,120,.6)}
-.cd-num.go{font-size:3.4rem;color:#fff;background:linear-gradient(160deg,#22C55E,#0E9F6E)}
+.cd-num.go,.cd-num.rdy{font-size:3.4rem}
+.cd-num.go{color:#fff;background:linear-gradient(160deg,#22C55E,#0E9F6E)}
 .cd-num.tick{animation:cdPop .5s cubic-bezier(.3,1.6,.5,1)}
 @keyframes cdPop{from{transform:scale(.4);opacity:.2}}
-.legend{padding:1.2rem 1.6rem;display:flex;flex-direction:column;gap:.8rem;min-width:min(26rem,90%)}
+.legend{padding:1.2rem 1.6rem;display:flex;flex-direction:column;gap:.7rem;min-width:min(28rem,90%)}
+.lg-row small{display:block;font-size:.92rem;font-weight:600;color:var(--muted)}
+.lg-combo{font-size:1.02rem;font-weight:700;text-align:center;color:#26324F;background:#FFF4E0;border-radius:.9rem;padding:.55rem .8rem}
 .legend h4{font-size:1.25rem;font-weight:800;text-align:center}
 .lg-row{display:flex;align-items:center;gap:1rem;font-size:1.2rem;font-weight:700}
 .lg-row .mini{display:flex;gap:.3rem;font-size:2.6rem}
@@ -217,7 +254,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
   -webkit-mask:radial-gradient(circle,#000 25%,transparent 68%);mask:radial-gradient(circle,#000 25%,transparent 68%)}
 .glow{position:absolute;left:50%;top:42%;width:18rem;height:18rem;margin:-9rem 0 0 -9rem;border-radius:50%;background:radial-gradient(circle,rgba(255,214,102,.55),transparent 65%)}
 @keyframes spin{to{transform:rotate(360deg)}}
-.pop-big{position:relative;width:clamp(8rem,calc((100vh - 53rem) / 1.52),16rem);width:clamp(8rem,calc((100dvh - 53rem) / 1.52),16rem);filter:drop-shadow(0 20px 26px rgba(0,0,40,.35))}
+.pop-big{position:relative;width:clamp(6rem,calc((100vh - 58rem) / 1.52),16rem);width:clamp(6rem,calc((100dvh - 58rem) / 1.52),16rem);filter:drop-shadow(0 20px 26px rgba(0,0,40,.35))}
 .screen.active .pop-big{animation:popIn .9s cubic-bezier(.3,1.5,.5,1) both .1s}
 .pop-big img{display:block;width:100%;animation:bob 3.4s ease-in-out infinite 1s}
 @keyframes popIn{from{transform:scale(.3) translateY(30%);opacity:0}}
@@ -235,21 +272,15 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .res-card p{font-size:1.2rem;margin-top:.35rem;color:#26324F;line-height:1.4}
 .res-card .claim{display:inline-block;margin-top:.6rem;font-size:1rem;font-weight:700;color:#0B4FD9;background:#E8F0FF;padding:.35rem .8rem;border-radius:999px}
 .res-stats{display:flex;gap:.7rem;width:100%}
-.res-stats div{flex:1;padding:.75rem .5rem;border-radius:1.1rem;background:rgba(255,255,255,.75);text-align:center;border:1px solid #fff}
+.res-stats div{flex:1;min-width:0;padding:.75rem .4rem;border-radius:1.1rem;background:rgba(255,255,255,.75);text-align:center;border:1px solid #fff}
 .res-stats b{display:block;font-size:1.6rem;font-weight:800;color:var(--blue)}
-.res-stats small{font-size:.92rem;font-weight:600;color:var(--muted)}
+.res-stats small{display:block;line-height:1.2;font-size:.9rem;font-weight:600;color:var(--muted)}
 .name-form{display:flex;gap:.6rem;width:100%}
 .name-form input{flex:1;min-width:0;font:inherit;font-size:1.15rem;font-weight:600;padding:.85rem 1.1rem;border-radius:1.1rem;border:2px solid #CBD8F6;background:#fff;color:var(--ink);
   outline:none;-webkit-user-select:text;user-select:text}
 .name-form input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(6,97,241,.15)}
 .name-form button{flex:none;width:auto;font-size:1.1rem;padding:.85rem 1.3rem;border-radius:1.1rem}
 .res-actions{display:flex;flex-direction:column;gap:.9rem;width:100%;margin-top:.2rem}
-@media (orientation:landscape){
-  #scr-result{background:linear-gradient(100deg,#14217A 0%,#2447D6 38%,#5F86F2 49%,#E6EDFF 56%,#F3F6FF 100%)}
-  .res-wrap{max-width:76rem;flex-direction:row;gap:3rem;padding:1.2rem 2.5rem}
-  .res-left{flex:1}.res-right{flex:1;max-width:32rem}
-  .pop-big{width:clamp(8rem,calc((100vh - 17rem) / 1.52),18rem);width:clamp(8rem,calc((100dvh - 17rem) / 1.52),18rem)}
-}
 
 /* ---------- LEADERBOARD ---------- */
 #scr-board{background:linear-gradient(180deg,#F6F8FF,#E6EDFF)}
@@ -284,14 +315,6 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .lb-empty{text-align:center;color:var(--muted);font-weight:600;font-size:1.15rem;padding:2rem 1rem}
 .lb-empty img{width:7rem;display:block;margin:0 auto 1rem;opacity:.9}
 .lb-play{margin-top:auto}
-@media (orientation:landscape){
-  .lb-wrap{max-width:74rem;display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr auto;column-gap:2.5rem;row-gap:1rem;align-items:start}
-  .tabs{grid-column:1/-1;justify-self:center}
-  .podium{grid-column:1;grid-row:2;align-self:center}
-  .lb-list{grid-column:2;grid-row:2/4;max-height:100%;overflow:auto}
-  .lb-empty{grid-column:1/-1;grid-row:2}
-  .lb-play{grid-column:1;grid-row:3}
-}
 
 /* ---------- MODALS ---------- */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:rgba(8,20,70,.45);
@@ -351,15 +374,15 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div class="info card rise" style="--d:.26s">
         <div class="info-row">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10a5 5 0 0 1 5 5v2.8a3.2 3.2 0 0 1-5.8 1.9L15 14H9l-1.2 1.7A3.2 3.2 0 0 1 2 13.8V11a5 5 0 0 1 5-5z"/><path d="M7 9.5v3M5.5 11h3"/><circle cx="15.5" cy="10.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="12.3" r=".6" fill="currentColor"/></svg></span>
-          <div><h3>Cara Main</h3><p>Pecahkan balon bertuliskan “Manajio” sebanyak mungkin dalam <b data-duration>15</b> detik.</p></div>
+          <div><h3>Cara Main</h3><p>Pecahkan balon bertuliskan “Manajio” sebanyak mungkin dalam <b data-duration>20</b> detik. Baca teliti: ada balon <b>tiruan</b>!</p></div>
         </div>
         <div class="info-row">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><path d="M15 9l5-5M17 4h3v3"/></svg></span>
-          <div><h3>Skor</h3><p>Balon “Manajio” <b class="plus">+<span data-good>5</span> poin</b><br>Selain “Manajio” <b class="minus">−<span data-bad>1</span> poin</b><br><span class="small">Capai ≥ <span data-target>15</span> poin = dapat popcorn! 🍿</span></p></div>
+          <div><h3>Skor</h3><p>“Manajio” <b class="plus">+<span data-good>5</span></b> · Manajio emas <b class="plus">+<span data-gold>15</span></b><br>Tiruan <b class="minus">−<span data-fake>3</span></b> · Bom <b class="minus">−<span data-bomb>5</span></b> · Lainnya <b class="minus">−<span data-bad>1</span></b><br><span class="small">Capai ≥ <span data-target>80</span> poin = dapat popcorn! 🍿</span></p></div>
         </div>
         <div class="info-row">
           <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.2 2 4.5 13.6h6.3L9.9 22l8.8-11.7h-6.4z"/></svg></span>
-          <div><h3>Eksekusi</h3><p>Game offline di tablet, berbasis sentuh.</p></div>
+          <div><h3>Combo</h3><p>Pecahkan “Manajio” beruntun: <b>5×</b> = poin ×2, <b>9×</b> = poin ×3. Salah pecah atau Manajio lolos, combo putus. Makin lama, balon makin cepat!</p></div>
         </div>
       </div>
       <div class="play-wrap rise" style="--d:.36s">
@@ -384,7 +407,10 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div class="timer" id="timer"><span class="timer-fill" id="timerFill"></span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4.2l2.6 1.6M9.5 2.5h5M18.7 6.4l1.3-1.3"/></svg>
         <span id="timerText">00:15</span></div>
-      <div class="scorebox" id="scoreBox"><small>Skor</small><b id="scoreText">0</b></div>
+      <div class="hud-right">
+        <div class="scorebox" id="scoreBox"><small>Skor</small><b id="scoreText">0</b></div>
+        <div class="combo" id="combo"><b id="comboMult">×1</b><span id="comboText">Combo 0</span></div>
+      </div>
     </div>
     <div class="balloons" id="balloons"></div>
     <div class="fx" id="fx"></div>
@@ -394,7 +420,11 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div class="legend card">
         <h4>Pecahkan balon “Manajio”!</h4>
         <div class="lg-row"><span class="mini" id="lgGood"></span>Balon “Manajio”<span class="pts plus">+<span data-good>5</span></span></div>
+        <div class="lg-row"><span class="mini" id="lgGold"></span>Manajio emas<span class="pts plus">+<span data-gold>15</span></span></div>
+        <div class="lg-row"><span class="mini" id="lgFake"></span><span>Tiruan<small>ejaan salah</small></span><span class="pts minus">−<span data-fake>3</span></span></div>
+        <div class="lg-row"><span class="mini" id="lgBomb"></span>Bom<span class="pts minus">−<span data-bomb>5</span></span></div>
         <div class="lg-row"><span class="mini" id="lgBad"></span>Balon lainnya<span class="pts minus">−<span data-bad>1</span></span></div>
+        <div class="lg-combo">🔥 Combo 5× = poin ×2 · 9× = poin ×3</div>
       </div>
     </div>
     <div class="overlay" id="timeup"><div class="timeup-badge">Waktu Habis!</div></div>
@@ -416,7 +446,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div class="res-card card rise" style="--d:.45s" id="resCard"></div>
       <div class="res-stats rise" style="--d:.52s">
         <div><b id="stGood">0</b><small>Balon Manajio</small></div>
-        <div><b id="stBad">0</b><small>Balon salah</small></div>
+        <div><b id="stCombo">0</b><small>Combo terbaik</small></div>
+        <div><b id="stBad">0</b><small>Salah pecah</small></div>
         <div><b id="stRank">-</b><small>Peringkat hari ini</small></div>
       </div>
       <form class="name-form rise" style="--d:.58s" id="nameForm" autocomplete="off">
@@ -468,10 +499,10 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div><b id="adAllWins">0</b><small>Total popcorn</small></div>
     </div>
     <div class="set-row">Durasi permainan
-      <select id="setDur"><option value="10">10 detik</option><option value="15">15 detik</option><option value="20">20 detik</option><option value="30">30 detik</option><option value="45">45 detik</option><option value="60">60 detik</option></select>
+      <select id="setDur"><option value="10">10 detik</option><option value="15">15 detik</option><option value="20">20 detik</option><option value="25">25 detik</option><option value="30">30 detik</option><option value="45">45 detik</option><option value="60">60 detik</option></select>
     </div>
     <div class="set-row">Skor minimal popcorn
-      <div class="stepper"><button type="button" id="tgMinus">−</button><output id="setTarget">15</output><button type="button" id="tgPlus">+</button></div>
+      <div class="stepper"><button type="button" id="tgMinus">−</button><output id="setTarget">80</output><button type="button" id="tgPlus">+</button></div>
     </div>
     <div class="set-row">Suara<button type="button" class="switch" id="swSound" aria-label="Suara"></button></div>
     <div class="set-row">Getar (Android)<button type="button" class="switch" id="swVib" aria-label="Getar"></button></div>
@@ -490,25 +521,37 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 /* ================= KONFIGURASI ================= */
 const CONFIG = {
   challengeLabel: 'Challenge 3',
-  pointsGood: 5,          // balon "Manajio"
-  pointsBad: -1,          // balon selain "Manajio"
+  pointsGood: 5,          // balon "Manajio" (dikali combo)
+  pointsGold: 15,         // balon Manajio emas (langka, cepat; dikali combo)
+  pointsFake: -3,         // balon tiruan (ejaan salah)
+  pointsBomb: -5,         // balon bom
+  pointsBad: -1,          // balon lain (silang, bintang, kado)
+  comboX2: 5,             // Manajio beruntun ke-5 dst. = poin x2
+  comboX3: 9,             // Manajio beruntun ke-9 dst. = poin x3
   clampZero: true,        // skor tidak turun di bawah 0
-  defaultDuration: 15,    // detik
-  defaultTarget: 15,      // skor minimal dapat popcorn
+  defaultDuration: 20,    // detik
+  defaultTarget: 80,      // skor minimal dapat popcorn (hasil simulasi bot: pemula ~25% menang, rata-rata ~90%)
   idleMs: 60000,          // layar hasil/leaderboard kembali ke awal setelah diam 60 detik
-  storeKey: 'manajio-popitup-v1'
+  storeKey: 'manajio-popitup-v2' // v2 = aturan menantang (leaderboard aturan lama tetap di v1, tidak dicampur)
 };
 // Aspek gambar balon (tinggi/lebar) hasil potong aset
 const TYPES = {
   manajio: { img: 'assets/balloon-blue.webp',   ar: 1.4289, scale: 1,    color: '#2F6BFF' },
   x:       { img: 'assets/balloon-red.webp',    ar: 1.3053, scale: .9,   color: '#F0465A' },
   star:    { img: 'assets/balloon-yellow.webp', ar: 1.3684, scale: .9,   color: '#FFC93C' },
-  gift:    { img: 'assets/balloon-purple.webp', ar: 1.3342, scale: .9,   color: '#9B5CF0' }
+  gift:    { img: 'assets/balloon-purple.webp', ar: 1.3342, scale: .9,   color: '#9B5CF0' },
+  fake:    { img: 'assets/balloon-blue.webp',   ar: 1.4289, scale: 1,    color: '#2F6BFF' },
+  gold:    { img: 'assets/balloon-yellow.webp', ar: 1.3684, scale: .92,  color: '#FFC21A' },
+  bomb:    { img: 'assets/balloon-purple.webp', ar: 1.3342, scale: .95,  color: '#2B2D3A' }
 };
+// ejaan tiruan: sengaja mirip "Manajio"
+const FAKE_LABELS = ['Manajo', 'Manjio', 'Menajio', 'Manaijo', 'Manajia', 'Mamajio']; // hindari l/I yang tak terbedakan dari i
 const FACES = {
   manajio: '<img src="assets/manajio-logo.png" alt="" draggable="false"><span>Manajio</span>',
   x: '<svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke="#fff" stroke-width="3.8" stroke-linecap="round" fill="none"/></svg>',
   star: '<svg viewBox="0 0 24 24"><path d="M12 2.6l2.85 5.9 6.45.9-4.7 4.5 1.15 6.4L12 17.3l-5.75 3 1.15-6.4-4.7-4.5 6.45-.9z" fill="#FFF7D1" stroke="#E89A00" stroke-width="1.3" stroke-linejoin="round"/></svg>',
+  gold: '<img src="assets/manajio-logo.png" alt="" draggable="false"><span>Manajio</span>',
+  bomb: '<svg viewBox="0 0 24 24"><circle cx="11" cy="14" r="7" fill="#fff"/><circle cx="11" cy="14" r="5.6" fill="#1D1F2B"/><path d="M8.3 11.6a3.6 3.6 0 0 1 3-1.7" stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".7"/><rect x="13.6" y="6.3" width="3.4" height="3" rx=".8" transform="rotate(40 15.3 7.8)" fill="#fff"/><path d="M16.8 6.2c1-1.8 2.6-2.2 3.6-1.6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="spark" d="M21 2.4l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z" fill="#FFD34D"/></svg>',
   gift: '<svg viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10" rx="1.6" fill="#F6EEFF"/><rect x="3" y="7" width="18" height="4.2" rx="1.2" fill="#fff"/><rect x="10.8" y="7" width="2.4" height="13.5" fill="#8C47E8"/><path d="M12 7c-1.5-3-5-3.6-5-1.4C7 7 10 7 12 7zm0 0c1.5-3 5-3.6 5-1.4C17 7 14 7 12 7z" fill="#fff" stroke="#8C47E8" stroke-width="1"/></svg>'
 };
 const STRING_SVG = '<svg class="bln-string" viewBox="0 0 16 62" preserveAspectRatio="none"><path d="M8 0C3 10 13 18 8 28S4 46 8 62"/></svg>';
@@ -576,6 +619,11 @@ const Sfx = {
   beep() { this.tone(660, .14, 'sine', .25); },
   go() { this.tone(990, .3, 'sine', .3); this.tone(1480, .3, 'sine', .12, .02); },
   tick() { this.tone(1250, .05, 'square', .05); },
+  boom() { this.noise(.3, .9, 160); this.tone(120, .45, 'sawtooth', .16, 0, 38); },
+  shine() { [1319, 1568, 1976, 2637].forEach((f, i) => this.tone(f, .16, 'sine', .09, i * .05)); },
+  combo() { [660, 880, 1175, 1568].forEach((f, i) => this.tone(f, .13, 'triangle', .14, i * .055)); },
+  warn() { this.tone(440, .12, 'square', .06); this.tone(440, .12, 'square', .06, .17); },
+  brk() { this.tone(520, .22, 'triangle', .09, 0, 240); },
   end() { this.tone(520, .2, 'triangle', .22); this.tone(392, .35, 'triangle', .22, .18); },
   win() { [523, 659, 784, 1047, 1319].forEach((f, i) => this.tone(f, .28, 'triangle', .2, i * .1)); },
   lose() { [523, 466, 392].forEach((f, i) => this.tone(f, .3, 'triangle', .16, i * .16)); },
@@ -610,6 +658,9 @@ function applyTexts() {
   $$('[data-target]').forEach(e => e.textContent = S().target);
   $$('[data-good]').forEach(e => e.textContent = Math.abs(CONFIG.pointsGood));
   $$('[data-bad]').forEach(e => e.textContent = Math.abs(CONFIG.pointsBad));
+  $$('[data-gold]').forEach(e => e.textContent = Math.abs(CONFIG.pointsGold));
+  $$('[data-fake]').forEach(e => e.textContent = Math.abs(CONFIG.pointsFake));
+  $$('[data-bomb]').forEach(e => e.textContent = Math.abs(CONFIG.pointsBomb));
   $('#challengeLabel').textContent = CONFIG.challengeLabel;
   const on = S().sound;
   $('#btnSound').innerHTML = on
@@ -619,16 +670,17 @@ function applyTexts() {
 }
 
 /* ================= BALON ================= */
-function balloonInner(type) {
+function balloonInner(type, label) {
   const t = TYPES[type];
-  return '<div class="bln-in"><img class="bln-img" src="' + t.img + '" alt="" draggable="false">' +
+  const face = type === 'fake' ? '<img src="assets/manajio-logo.png" alt="" draggable="false"><span>' + (label || FAKE_LABELS[0]) + '</span>' : FACES[type];
+  return '<div class="bln-in t-' + type + '"><img class="bln-img" src="' + t.img + '" alt="" draggable="false">' +
     STRING_SVG.replace('class="bln-string"', 'class="bln-string" style="top:' + (t.ar - .03).toFixed(3) + 'em"') +
-    '<div class="bln-face" style="height:' + (t.ar * .88).toFixed(3) + 'em">' + FACES[type] + '</div></div>';
+    '<div class="bln-face" style="height:' + (t.ar * .88).toFixed(3) + 'em">' + face + '</div></div>';
 }
-function miniBalloon(type, sizeEm) {
+function miniBalloon(type, sizeEm, label) {
   const w = document.createElement('div');
   w.style.cssText = 'position:relative;font-size:' + (sizeEm || 1) + 'em;height:' + (TYPES[type].ar + .1) + 'em';
-  w.innerHTML = balloonInner(type);
+  w.innerHTML = balloonInner(type, label);
   const s = w.querySelector('.bln-string'); if (s) s.remove();
   return w;
 }
@@ -636,7 +688,7 @@ function miniBalloon(type, sizeEm) {
 (function decorate() {
   const d1 = $('.deco-1'), d2 = $('.deco-2');
   d1.innerHTML = ''; d2.innerHTML = '';
-  [[d1, 'manajio'], [d2, 'star']].forEach(([el, type]) => {
+  [[d1, 'manajio'], [d2, 'gold']].forEach(([el, type]) => {
     const inner = document.createElement('div');
     inner.className = 'bln';
     inner.style.position = 'relative';
@@ -646,17 +698,24 @@ function miniBalloon(type, sizeEm) {
     fit(); new ResizeObserver(fit).observe(el);
   });
   $('#lgGood').appendChild(miniBalloon('manajio'));
+  $('#lgGold').appendChild(miniBalloon('gold'));
+  $('#lgFake').appendChild(miniBalloon('fake', 1, 'Manajo'));
+  $('#lgBomb').appendChild(miniBalloon('bomb'));
   ['x', 'star', 'gift'].forEach(t => $('#lgBad').appendChild(miniBalloon(t, .9)));
 })();
 
 /* ================= GAME ================= */
 const field = $('#field'), layer = $('#balloons'), fx = $('#fx');
 const G = { phase: 'idle', paused: false, t: 0, cdT: 0, cdShown: -1, tuT: 0, score: 0, good: 0, bad: 0, list: [], spawnT: 0,
-  lastCols: [], sinceGood: 0, W: 0, H: 0, bw: 0, raf: 0, last: 0, lastSec: -1, entryId: null };
+  lastCols: [], sinceGood: 0, W: 0, H: 0, bw: 0, raf: 0, last: 0, lastSec: -1, entryId: null,
+  combo: 0, maxCombo: 0, fakeOn: false, bombOn: false, rushOn: false, fakeAt: 0, bombAt: 0, goldQ: [] };
+const RESET = () => ({ phase: 'countdown', paused: false, t: 0, cdT: 0, cdShown: -1, tuT: 0, score: 0, good: 0, bad: 0, spawnT: 0, lastCols: [],
+  sinceGood: 0, lastSec: -1, entryId: null, combo: 0, maxCombo: 0, fakeOn: false, bombOn: false, rushOn: false, fakeAt: 0, bombAt: 0, goldQ: [] });
 
 function measure() {
   G.W = field.clientWidth; G.H = field.clientHeight;
-  G.bw = clamp(Math.min(G.W * .2, G.H * .165), 92, 200);
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  G.bw = clamp(Math.min(G.W * .2, G.H * .165), 92, Math.max(200, rem * 8.8));
 }
 window.addEventListener('resize', () => { if (current === 'game') measure(); });
 
@@ -668,8 +727,9 @@ function startGame() {
   closeModal('mdlPause');
   show('game');
   clearBalloons();
-  Object.assign(G, { phase: 'countdown', paused: false, t: 0, cdT: 0, cdShown: -1, tuT: 0, score: 0, good: 0, bad: 0, spawnT: 0, lastCols: [], sinceGood: 0, lastSec: -1, entryId: null });
+  Object.assign(G, RESET());
   measure();
+  field.classList.remove('rush', 'shake'); updateCombo();
   $('#scoreText').textContent = '0';
   updateTimer(S().duration, S().duration);
   $('#timeup').classList.remove('on');
@@ -679,9 +739,9 @@ function startGame() {
   G.raf = requestAnimationFrame(loop);
 }
 
-function setCd(txt, go) {
+function setCd(txt, go, rdy) {
   const el = $('#cdNum');
-  el.textContent = txt; el.classList.toggle('go', !!go);
+  el.textContent = txt; el.classList.toggle('go', !!go); el.classList.toggle('rdy', !!rdy);
   el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick');
 }
 
@@ -696,16 +756,21 @@ function tick(dt) {
   if (G.paused) return;
   if (G.phase === 'countdown') {
     G.cdT += dt;
-    if (G.cdT < 3) {
-      const n = 3 - Math.floor(G.cdT);
+    if (G.cdT < 1) {
+      if (G.cdShown !== 4) { G.cdShown = 4; setCd('Siap?', false, true); }
+    } else if (G.cdT < 4) {
+      const n = 3 - Math.floor(G.cdT - 1);
       if (n !== G.cdShown) { G.cdShown = n; setCd(String(n)); Sfx.beep(); }
-    } else if (G.cdT < 3.65) {
+    } else if (G.cdT < 4.65) {
       if (G.cdShown !== 0) { G.cdShown = 0; setCd('Mulai!', true); Sfx.go(); vib(30); }
     } else beginPlay();
   } else if (G.phase === 'play') {
     G.t += dt;
     const dur = S().duration, rem = Math.max(0, dur - G.t);
     updateTimer(rem, dur);
+    if (!G.fakeOn && G.t >= G.fakeAt) { G.fakeOn = true; toast('👀 Awas balon tiruan! Baca teliti', 'warn'); Sfx.warn(); }
+    if (!G.bombOn && G.t >= G.bombAt) { G.bombOn = true; toast('💣 Bom mulai muncul! −' + Math.abs(CONFIG.pointsBomb), 'warn'); Sfx.warn(); }
+    if (!G.rushOn && dur >= 12 && rem <= 5) { G.rushOn = true; field.classList.add('rush'); toast('⚡ 5 detik terakhir: makin cepat!', 'hot'); Sfx.warn(); }
     spawnLogic(dt);
     if (G.t >= dur) endPlay();
   }
@@ -717,6 +782,9 @@ function beginPlay() {
   G.phase = 'play';
   $('#countdown').classList.remove('on');
   measure();
+  const dur = S().duration;
+  G.fakeAt = Math.min(2.5, dur * .15); G.bombAt = Math.min(5, dur * .3);
+  G.goldQ = dur >= 12 ? [rand(.25, .4) * dur, rand(.58, .74) * dur] : [rand(.3, .6) * dur];
   // langsung ada balon di layar
   spawn(G.H * .62); spawn(G.H * .86); spawn(G.H * 1.0);
   G.spawnT = .35;
@@ -733,37 +801,44 @@ function updateTimer(rem, dur) {
 
 function pickType() {
   if (G.sinceGood >= 3) return 'manajio';
-  const r = Math.random();
-  return r < .46 ? 'manajio' : r < .64 ? 'x' : r < .82 ? 'star' : 'gift';
+  const w = [['manajio', .40], ['fake', G.fakeOn ? .17 : 0], ['bomb', G.bombOn ? .07 : 0], ['x', .12], ['star', .12], ['gift', .12]];
+  let r = Math.random() * w.reduce((a, x) => a + x[1], 0);
+  for (const [t, k] of w) { if ((r -= k) < 0) return t; }
+  return 'manajio';
 }
+const isGood = t => t === 'manajio' || t === 'gold';
+const comboMult = c => c >= CONFIG.comboX3 ? 3 : c >= CONFIG.comboX2 ? 2 : 1;
 
-function spawn(yStart) {
-  const type = pickType();
-  G.sinceGood = type === 'manajio' ? 0 : G.sinceGood + 1;
-  const T = TYPES[type], w = G.bw * T.scale, h = w * (T.ar + .62);
+function spawn(yStart, force) {
+  const type = force || pickType();
+  G.sinceGood = isGood(type) ? 0 : G.sinceGood + 1;
+  const p = Math.min(1, G.t / S().duration);
+  // makin lama: balon makin kecil, cepat, dan meliuk
+  const T = TYPES[type], w = G.bw * T.scale * (1 - .2 * p), h = w * (T.ar + .62);
   const cols = Math.max(3, Math.floor(G.W / (G.bw * 1.1))), colW = G.W / cols;
   let col, tries = 0;
   do { col = Math.floor(Math.random() * cols); tries++; } while (G.lastCols.includes(col) && tries < 15);
   G.lastCols.push(col); while (G.lastCols.length > Math.min(2, cols - 1)) G.lastCols.shift();
   const x0 = clamp(col * colW + (colW - w) / 2 + rand(-.15, .15) * colW, 4, G.W - w - 4);
-  const p = Math.min(1, G.t / S().duration);
-  const cross = (4.4 - 1.8 * p) * rand(.88, 1.12);
+  const cross = type === 'gold' ? rand(1.9, 2.3) : (4.3 - 2.1 * p) * rand(.88, 1.12) * (G.rushOn ? .85 : 1);
+  const label = type === 'fake' ? FAKE_LABELS[Math.floor(Math.random() * FAKE_LABELS.length)] : '';
   const el = document.createElement('div');
   el.className = 'bln'; el.style.fontSize = w.toFixed(1) + 'px';
-  el.innerHTML = balloonInner(type);
+  el.innerHTML = balloonInner(type, label);
   layer.appendChild(el);
-  const b = { el, type, w, ar: T.ar, h, x0, x: x0, y: yStart != null ? yStart : G.H + 6, speed: (G.H + h) / cross,
-    amp: rand(6, 20), freq: rand(.5, 1.1), ph: rand(0, 6.28), rot: 0, age: 0 };
+  const b = { el, type, label, w, ar: T.ar, h, x0, x: x0, y: yStart != null ? yStart : G.H + 6, speed: (G.H + h) / cross,
+    amp: G.bw * rand(.04, .11) * (1 + 1.3 * p) * (type === 'gold' ? 1.6 : 1), freq: rand(.5, 1.1) * (1 + .5 * p), ph: rand(0, 6.28), rot: 0, age: 0 };
   G.list.push(b); place(b);
 }
 
 function spawnLogic(dt) {
+  if (G.goldQ.length && G.t >= G.goldQ[0]) { G.goldQ.shift(); spawn(null, 'gold'); toast('✨ Manajio emas! +' + CONFIG.pointsGold, 'gold'); Sfx.shine(); }
   G.spawnT -= dt;
   if (G.spawnT <= 0) {
     spawn();
     const p = Math.min(1, G.t / S().duration);
-    const widthFactor = clamp(820 / G.W, .68, 1.1);
-    G.spawnT = (.62 - .24 * p) * rand(.75, 1.25) * widthFactor;
+    const widthFactor = clamp(820 * Math.max(1, G.bw / 200) / G.W, .68, 1.1);
+    G.spawnT = (.6 - .26 * p) * rand(.75, 1.25) * widthFactor * (G.rushOn ? .85 : 1);
   }
 }
 
@@ -776,7 +851,11 @@ function updateBalloons(dt) {
     b.y -= b.speed * dt;
     b.x = b.x0 + Math.sin(b.age * b.freq * Math.PI + b.ph) * b.amp;
     b.rot = Math.sin(b.age * b.freq * Math.PI + b.ph + 1.2) * 5;
-    if (b.y < -b.h - 10) { b.el.remove(); G.list.splice(i, 1); continue; }
+    if (b.y < -b.h - 10) {
+      b.el.remove(); G.list.splice(i, 1);
+      if (isGood(b.type) && G.phase === 'play') breakCombo(true); // Manajio lolos = combo putus
+      continue;
+    }
     place(b);
   }
 }
@@ -799,21 +878,57 @@ field.addEventListener('pointerdown', e => {
 
 function pop(i) {
   const b = G.list[i]; G.list.splice(i, 1);
-  const good = b.type === 'manajio';
+  const t = b.type, good = isGood(t);
   const cx = b.x + b.w / 2, cy = b.y + b.w * b.ar * .44;
   b.el.classList.add('pop');
   setTimeout(() => b.el.remove(), 220);
-  burst(cx, cy, TYPES[b.type].color, good);
-  floatText(cx, cy, good ? '+' + CONFIG.pointsGood : '−' + Math.abs(CONFIG.pointsBad), good);
+  burst(cx, cy, TYPES[t].color, good);
   Sfx.pop();
-  if (good) { G.good++; G.score += CONFIG.pointsGood; Sfx.good(); vib(15); }
-  else {
-    G.bad++; G.score += CONFIG.pointsBad; if (CONFIG.clampZero) G.score = Math.max(0, G.score);
-    Sfx.bad(); vib([40, 30, 40]);
+  if (good) {
+    const before = comboMult(G.combo);
+    G.combo++; G.maxCombo = Math.max(G.maxCombo, G.combo);
+    const mult = comboMult(G.combo), pts = (t === 'gold' ? CONFIG.pointsGold : CONFIG.pointsGood) * mult;
+    G.good++; G.score += pts;
+    floatText(cx, cy, '+' + pts, true);
+    if (t === 'gold') Sfx.shine(); else Sfx.good();
+    vib(15);
+    if (mult > before) { toast('🔥 Combo ×' + mult + '!', 'hot'); Sfx.combo(); }
+    updateCombo(mult > before);
+  } else {
+    const pts = t === 'fake' ? CONFIG.pointsFake : t === 'bomb' ? CONFIG.pointsBomb : CONFIG.pointsBad;
+    G.bad++; G.score += pts; if (CONFIG.clampZero) G.score = Math.max(0, G.score);
+    floatText(cx, cy, '−' + Math.abs(pts) + (t === 'fake' ? ' Tiruan!' : t === 'bomb' ? ' BOM!' : ''), false);
+    if (t === 'bomb') { Sfx.boom(); vib([90, 40, 90]); field.classList.remove('shake'); void field.offsetWidth; field.classList.add('shake'); }
+    else { Sfx.bad(); vib([40, 30, 40]); }
     const f = $('#flash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
+    breakCombo(false);
   }
   $('#scoreText').textContent = G.score;
   const sb = $('#scoreBox'); sb.classList.remove('bump', 'shake'); void sb.offsetWidth; sb.classList.add(good ? 'bump' : 'shake');
+}
+
+function updateCombo(levelUp) {
+  const el = $('#combo'), m = comboMult(G.combo);
+  if (G.combo < 2) { if (!el.classList.contains('brk')) el.classList.remove('on'); return; }
+  el.classList.remove('brk', 'm1', 'm2', 'm3'); el.classList.add('on', 'm' + m);
+  $('#comboMult').textContent = '×' + m;
+  $('#comboText').textContent = 'Combo ' + G.combo;
+  if (levelUp) { el.classList.remove('lvl'); void el.offsetWidth; el.classList.add('lvl'); }
+}
+function breakCombo(escaped) {
+  const had = G.combo;
+  G.combo = 0;
+  if (had < 2) return;
+  const el = $('#combo');
+  $('#comboText').textContent = escaped ? 'Manajio lolos!' : 'Combo putus!';
+  el.classList.add('brk'); Sfx.brk();
+  setTimeout(() => { if (G.combo < 2) el.classList.remove('on', 'brk'); }, 650);
+}
+function toast(txt, kind) {
+  const d = document.createElement('div');
+  d.className = 'toast ' + (kind || ''); d.textContent = txt;
+  $$('.toast', field).forEach(x => x.remove()); // satu pesan pada satu waktu
+  field.appendChild(d); setTimeout(() => d.remove(), 1950);
 }
 
 function burst(x, y, color, good) {
@@ -837,6 +952,7 @@ function floatText(x, y, txt, good) {
 function endPlay() {
   G.phase = 'timeup'; G.tuT = 0;
   updateTimer(0, S().duration);
+  field.classList.remove('rush'); $$('.toast', field).forEach(x => x.remove());
   layer.classList.add('leave');
   $('#timeup').classList.add('on');
   Sfx.end(); vib(80);
@@ -844,7 +960,7 @@ function endPlay() {
   const d = Store.data;
   d.counter += 1;
   const entry = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: 'Pemain ' + d.counter,
-    score: G.score, good: G.good, bad: G.bad, win: G.score >= S().target, target: S().target, ts: Date.now() };
+    score: G.score, good: G.good, bad: G.bad, maxCombo: G.maxCombo, win: G.score >= S().target, target: S().target, ts: Date.now() };
   d.entries.push(entry);
   if (d.entries.length > 3000) d.entries.splice(0, d.entries.length - 3000);
   Store.save();
@@ -867,6 +983,7 @@ function resumeGame() { closeModal('mdlPause'); G.last = performance.now(); G.pa
 function quitGame() {
   cancelAnimationFrame(G.raf); G.phase = 'idle'; G.paused = false;
   closeModal('mdlPause'); $('#countdown').classList.remove('on'); $('#timeup').classList.remove('on');
+  field.classList.remove('rush'); $$('.toast', field).forEach(x => x.remove());
   clearBalloons(); show('intro');
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && current === 'game') pauseGame(); });
@@ -888,6 +1005,7 @@ function showResult() {
     : '<div class="rc-icon try">!</div><div><h3>Belum berhasil<br>kali ini</h3><p>Kumpulkan skor ≥ ' + S().target + ' untuk dapat <b>Popcorn Gratis</b>. Yuk, coba lagi!</p></div>';
   $('#stGood').textContent = G.good;
   $('#stBad').textContent = G.bad;
+  $('#stCombo').textContent = G.maxCombo;
   const rk = ranked(true).findIndex(e => e.id === G.entryId);
   $('#stRank').textContent = rk >= 0 ? '#' + (rk + 1) : '-';
   const inp = $('#nameInput'); inp.value = '';
@@ -977,7 +1095,7 @@ hold.addEventListener('pointerdown', () => {
 ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => hold.addEventListener(ev, () => { clearTimeout(holdTimer); hold.classList.remove('holding'); }));
 $('#setDur').addEventListener('change', e => { S().duration = Number(e.target.value); Store.save(); applyTexts(); });
 $('#tgMinus').addEventListener('click', () => { S().target = Math.max(5, S().target - 5); Store.save(); renderAdmin(); applyTexts(); });
-$('#tgPlus').addEventListener('click', () => { S().target = Math.min(200, S().target + 5); Store.save(); renderAdmin(); applyTexts(); });
+$('#tgPlus').addEventListener('click', () => { S().target = Math.min(500, S().target + 5); Store.save(); renderAdmin(); applyTexts(); });
 $('#swSound').addEventListener('click', () => { S().sound = !S().sound; Store.save(); renderAdmin(); applyTexts(); });
 $('#swVib').addEventListener('click', () => { S().vibrate = !S().vibrate; Store.save(); renderAdmin(); });
 $('#swFull').addEventListener('click', () => { S().fullscreen = !S().fullscreen; Store.save(); renderAdmin(); });
@@ -1008,9 +1126,10 @@ const Confetti = {
     this.cv.width = innerWidth * dpr; this.cv.height = innerHeight * dpr; this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const cols = ['#0661F1', '#14B8A6', '#F7C948', '#EF4458', '#9B5CF0', '#FFFFFF', '#3D84FF'];
     this.parts = [];
+    const app = document.getElementById('app').getBoundingClientRect(); // tembak dari tepi kolom game
     for (let i = 0; i < 170; i++) {
       const fromLeft = i % 2 === 0;
-      this.parts.push({ x: fromLeft ? -10 : innerWidth + 10, y: innerHeight * rand(.35, .7),
+      this.parts.push({ x: fromLeft ? app.left - 10 : app.right + 10, y: innerHeight * rand(.35, .7),
         vx: (fromLeft ? 1 : -1) * rand(4, 13) * 60, vy: rand(-16, -6) * 60, g: rand(16, 24) * 60,
         w: rand(7, 13), h: rand(10, 18), rot: rand(0, 6.28), vr: rand(-8, 8), c: cols[i % cols.length], drag: rand(.985, .993) });
     }
@@ -1071,7 +1190,7 @@ if (DEBUG) {
   window.__popitup = {
     G, S, Store, DEBUG,
     step(seconds, dt = 1 / 60) { for (let t = 0; t < seconds; t += dt) tick(dt); return { phase: G.phase, t: G.t, score: G.score, balloons: G.list.length }; },
-    balloons() { return G.list.map(b => ({ type: b.type, cx: b.x + b.w / 2, cy: b.y + b.w * b.ar * .44, w: b.w })); },
+    balloons() { return G.list.map(b => ({ type: b.type, label: b.label, cx: b.x + b.w / 2, cy: b.y + b.w * b.ar * .44, w: b.w })); },
     tapAt(x, y) { const r = field.getBoundingClientRect(); field.dispatchEvent(new PointerEvent('pointerdown', { clientX: r.left + x, clientY: r.top + y, bubbles: true, cancelable: true })); }
   };
 }

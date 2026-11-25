@@ -1,7 +1,7 @@
 // Service worker: menyimpan game ke cache agar tetap jalan tanpa internet setelah dibuka sekali (saat di-host via http/https).
 // Strategi: file game diambil dari jaringan dulu (selalu versi terbaru saat online), jatuh ke cache saat offline.
 // Font Google: cache dulu (jarang berubah), agar tetap tampil saat offline.
-const CACHE = 'popitup-v2';
+const CACHE = 'popitup-v4';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './assets/manajio-logo.png', './assets/stage.webp', './assets/popcorn.webp', './assets/sky.webp',

@@ -1,11 +1,11 @@
 {
   "name": "Pop It Up · Manajio Meet",
   "short_name": "Pop It Up",
-  "description": "Game booth Manajio Meet: pecahkan balon Manajio dalam 15 detik.",
+  "description": "Game booth Manajio Meet: pecahkan balon Manajio, hindari tiruan & bom, kejar combo.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
-  "orientation": "any",
+  "orientation": "portrait",
   "background_color": "#EEF3FF",
   "theme_color": "#0661F1",
   "lang": "id",
