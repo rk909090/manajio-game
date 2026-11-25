@@ -1,0 +1,15 @@
+{
+  "name": "Pop It Up · Manajio Meet",
+  "short_name": "Pop It Up",
+  "description": "Game booth Manajio Meet: pecahkan balon Manajio dalam 15 detik.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#EEF3FF",
+  "theme_color": "#0661F1",
+  "lang": "id",
+  "icons": [
+    { "src": "assets/manajio-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
